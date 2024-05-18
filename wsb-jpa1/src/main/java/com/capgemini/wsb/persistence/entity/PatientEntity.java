@@ -1,13 +1,9 @@
 package com.capgemini.wsb.persistence.entity;
 
-import java.time.LocalDate;
+import com.capgemini.wsb.persistence.enums.InsuranceType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "PATIENT")
@@ -24,15 +20,24 @@ public class PatientEntity {
 	private String lastName;
 
 	@Column(nullable = false)
-	private String telephoneNumber;
-
-	private String email;
-
-	@Column(nullable = false)
 	private String patientNumber;
 
 	@Column(nullable = false)
-	private LocalDate dateOfBirth;
+	private String dateOfBirth;
+
+	@Column(name = "insurance_type")
+	@Enumerated(EnumType.STRING)
+	private InsuranceType insuranceType;
+
+
+	@ManyToOne
+	@JoinColumn(name = "address_id", nullable = false)
+	private AddressEntity address;
+
+	@OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<VisitEntity> visits;
+
+	// getters and setters
 
 	public Long getId() {
 		return id;
@@ -58,22 +63,6 @@ public class PatientEntity {
 		this.lastName = lastName;
 	}
 
-	public String getTelephoneNumber() {
-		return telephoneNumber;
-	}
-
-	public void setTelephoneNumber(String telephoneNumber) {
-		this.telephoneNumber = telephoneNumber;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public String getPatientNumber() {
 		return patientNumber;
 	}
@@ -82,12 +71,27 @@ public class PatientEntity {
 		this.patientNumber = patientNumber;
 	}
 
-	public LocalDate getDateOfBirth() {
+	public String getDateOfBirth() {
 		return dateOfBirth;
 	}
 
-	public void setDateOfBirth(LocalDate dateOfBirth) {
+	public void setDateOfBirth(String dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
 	}
 
+	public AddressEntity getAddress() {
+		return address;
+	}
+
+	public void setAddress(AddressEntity address) {
+		this.address = address;
+	}
+
+	public List<VisitEntity> getVisits() {
+		return visits;
+	}
+
+	public void setVisits(List<VisitEntity> visits) {
+		this.visits = visits;
+	}
 }
